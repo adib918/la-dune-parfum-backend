@@ -16,7 +16,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 Route::get('verified-email/{id}/{hash}', function(string $id, string $hash){
     return response()->json(['id' => $id, 'hash' => $hash], 200);
 })->middleware(['auth:sanctum', 'signed'])->domain("https://www.laduneparfum.com")->name('verification.verify');
-Route::post('verified-email/{id}/{hash}', [VerifyEmailController::class, 'verify'])->middleware(['auth:sanctum', 'signed'])->domain("https://www.laduneparfum.com")->name('verification.email');
+Route::post('verified-email/{id}/{hash}', [VerifyEmailController::class, 'verify'])->middleware(['auth:sanctum', 'signed'])->name('verification.email');
 
 Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
 
