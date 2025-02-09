@@ -15,7 +15,7 @@ class SendEmailService{
             'message' => $request->message,
         ];
 
-        Mail::to('example@gmail.com')
+        Mail::to('info@laduneparfum.com')
         ->queue(new MessageMail($data));
 
         return response()->json(['message' => 'Your message has been sent successfully.'], 200);
