@@ -8,6 +8,9 @@ use App\Http\Controllers\Auth\PhoneVerficiationController;
 use App\Http\Requests\VerifyEmailRequest;
 use App\Http\Services\SendEmailService;
 use App\Http\Services\VerifyEmailService;
+use App\Mail\EmailMail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterUserController::class, 'store'])->middleware('guest')->name('user.register');
@@ -19,7 +22,33 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 
 // Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum'])->name('verification.send');
 
-Route::post( '/verification-code', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
+Route::post( '/verification-code', function(){
+    $user = User::findOrFail(auth()->user()->id);
+        if(!auth()->check()){
+            return response()->json(['message' => 'You have to be authorization'], 401);
+        }
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(["message" => "Email already verified."], 400);
+        }
+
+        $otp_code = rand(111111,999999);
+        $otp_expire_at = now()->addMinutes(60);
+
+        auth()->user()->update([
+            'email_verification_code' => $otp_code,
+            'email_verification_code_expire_at' => $otp_expire_at,
+        ]);
+
+        $data = [
+            'otp_code' => $otp_code,
+            'otp_expire_at' => $otp_expire_at,
+        ];
+
+        Mail::to(auth()->user()->email)
+        ->send(new EmailMail($data));
+
+        return response()->json(['message' => 'Verification link sent!'], 200);
+})->middleware(['auth:sanctum']);
 Route::post( '/verify-email', function(VerifyEmailRequest $request, VerifyEmailService $service){
     return $service->verifyEmail($request);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
