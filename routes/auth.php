@@ -17,17 +17,17 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 
 // Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum'])->name('verification.send');
 
-Route::post( '/verification-code', function(){
-    return response()->json(['message'=>'okay!']);
-})->middleware(['auth:sanctum']);
-Route::post( '/verify-email', [VerifyEmailController::class, 'verify'])->middleware(['auth:sanctum', 'throttle:6,1']);
+Route::post( '/verification-code', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
+Route::post( '/verify-email', function(){
+    if(!auth()->check()){
+        return response()->json(['message' => 'You have to be authorization'], 401);
+    }
+    return response()->json(['message' => 'okay!']);
+})->middleware(['auth:sanctum', 'throttle:6,1']);
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot_passowrd'])->name('password.email');
 
 Route::get('/reset-password/{token}/{email}', function (string $token, string $email) {
-    if(!auth()->check()){
-        return response()->json(['message' => 'You have to be authorization'], 401);
-    }
     return response()->json(['token' => $token, 'email' => $email], 200);
 })->domain("https://www.laduneparfum.com")->name('password.reset');
 
