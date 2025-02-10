@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\V1\UserResource;
 use App\Http\Services\VerifyEmailService;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -24,9 +25,9 @@ class RegisterUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $user->createToken($user->name)->plainTextToken,
-            'message' => 'User logged in!',
+            'message' => 'User created successfully!',
         ]);
     }
 
