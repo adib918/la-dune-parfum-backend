@@ -12,6 +12,7 @@ class VerifyEmailController extends Controller
         return $service->verifyEmail($request);
     }
     public function resend_verification_link(VerifyEmailService $service){
+        return response()->json(['message' => "test succesffull."], 200);
         return $service->reSendEmail();
     }
 }
