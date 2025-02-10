@@ -13,9 +13,9 @@ class VerifyEmailService{
     public function sendEmailVerification($id){
         $user = User::findOrFail($id);
 
-        if ($user->hasVerifiedEmail()) {
-            return response()->json(["message" => "Email already verified."], 400);
-        }
+        // if ($user->hasVerifiedEmail()) {
+        //     return response()->json(["message" => "Email already verified."], 400);
+        // }
 
         $otp_code = rand(111111,999999);
         $otp_expire_at = now()->addMinutes(60);
