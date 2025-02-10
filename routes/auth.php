@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Auth\UserAddressController;
@@ -19,7 +20,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 
 // Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum'])->name('verification.send');
 
-Route::post( '/verification-code', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
+Route::post( '/verification-code', [EmailVerificationController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
 Route::post( '/verify-email', function(VerifyEmailRequest $request, VerifyEmailService $service){
     return $service->verifyEmail($request);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
