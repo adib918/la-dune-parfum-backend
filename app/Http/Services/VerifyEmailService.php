@@ -60,7 +60,7 @@ class VerifyEmailService{
     }
 
     public function reSendEmail(){
-        return response()->json(['message' => auth()->user()->id], 200);
+        return response()->json(['message' => "test succesffull."], 200);
         $user = User::findOrFail(auth()->user()->id);
         // if(!$user->check()){
         //     return response()->json(['message' => 'You have to be authorization'], 401);
