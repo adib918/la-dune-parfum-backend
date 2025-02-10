@@ -9,6 +9,7 @@ use App\Http\Requests\VerifyEmailRequest;
 use App\Http\Services\SendEmailService;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterUserController::class, 'store'])->middleware('guest')->name('user.register');
@@ -34,6 +35,10 @@ Route::post( '/verify-email', function(VerifyEmailRequest $request){
     // }
     if($user->hasVerifiedEmail()){
         return response()->json(['message' => 'Your email is already verified.'], 400);
+    }
+    if (!$user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
+        event(new Verified($user));
     }
     return response()->json(['message' => 'okay!']);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
