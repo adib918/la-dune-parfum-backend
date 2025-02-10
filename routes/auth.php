@@ -40,7 +40,7 @@ Route::post( '/verify-email', function(VerifyEmailRequest $request){
         $user->markEmailAsVerified();
         event(new Verified($user));
     }
-    return response()->json(['message' => 'okay!']);
+    return response()->json(['message' => 'Email verified successfully.'], 200);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot_passowrd'])->name('password.email');
