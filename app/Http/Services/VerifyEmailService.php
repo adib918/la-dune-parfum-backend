@@ -60,18 +60,19 @@ class VerifyEmailService{
     }
 
     public function reSendEmail(){
-        // $user = User::findOrFail(auth()->user()->id);
-        if(!auth()->check()){
-            return response()->json(['message' => 'You have to be authorization'], 401);
-        }
-        // if ($user->hasVerifiedEmail()) {
-        //     return response()->json(["message" => "Email already verified."], 400);
+        return response()->json(['message' => auth()->user()->id], 200);
+        $user = User::findOrFail(auth()->user()->id);
+        // if(!$user->check()){
+        //     return response()->json(['message' => 'You have to be authorization'], 401);
         // }
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(["message" => "Email already verified."], 400);
+        }
 
         $otp_code = rand(111111,999999);
         $otp_expire_at = now()->addMinutes(60);
 
-        auth()->user()->update([
+        $user->update([
             'email_verification_code' => $otp_code,
             'email_verification_code_expire_at' => $otp_expire_at,
         ]);
@@ -81,7 +82,7 @@ class VerifyEmailService{
             'otp_expire_at' => $otp_expire_at,
         ];
 
-        Mail::to(auth()->user()->email)
+        Mail::to($user->email)
         ->send(new EmailMail($data));
 
         return response()->json(['message' => 'Verification link sent!'], 200);
