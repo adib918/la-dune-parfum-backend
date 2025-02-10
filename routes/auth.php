@@ -29,9 +29,9 @@ Route::post( '/verify-email', function(VerifyEmailRequest $request){
     if(auth()->user()->email_verification_code != (int)$request->email_verification_code){
         return response()->json(["message" => "Verification code isn't correct."], 400);
     }
-    if(Carbon::now()->diffInMinutes(auth()->user()->email_verification_code_expire_at) > 60){
-        return response()->json(['message' => 'Your verification code has expired.'])->setStatusCode(400);
-    }
+    // if(Carbon::now()->diffInMinutes(auth()->user()->email_verification_code_expire_at) > 60){
+    //     return response()->json(['message' => 'Your verification code has expired.'])->setStatusCode(400);
+    // }
     if($user->hasVerifiedEmail()){
         return response()->json(['message' => 'Your email is already verified.'], 400);
     }
