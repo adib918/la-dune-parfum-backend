@@ -60,13 +60,13 @@ class VerifyEmailService{
     }
 
     public function reSendEmail(){
-        $user = User::findOrFail(auth()->user()->id);
+        // $user = User::findOrFail(auth()->user()->id);
         if(!auth()->check()){
             return response()->json(['message' => 'You have to be authorization'], 401);
         }
-        if ($user->hasVerifiedEmail()) {
-            return response()->json(["message" => "Email already verified."], 400);
-        }
+        // if ($user->hasVerifiedEmail()) {
+        //     return response()->json(["message" => "Email already verified."], 400);
+        // }
 
         $otp_code = rand(111111,999999);
         $otp_expire_at = now()->addMinutes(60);
