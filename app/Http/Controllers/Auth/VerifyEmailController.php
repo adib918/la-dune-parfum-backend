@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class VerifyEmailController extends Controller
 {
@@ -32,7 +31,7 @@ class VerifyEmailController extends Controller
         // return redirect()->to('/');
     }
     public function resend_verification_link(){
-        if(!Auth::check()){
+        if(!auth()->check()){
             return response()->json(['message' => 'You have to be authorization'], 400);
         }
         if (auth()->user()->hasVerifiedEmail()) {
