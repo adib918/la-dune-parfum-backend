@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\UserAddressController;
 use App\Http\Controllers\auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PhoneVerficiationController;
 use App\Http\Services\SendEmailService;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterUserController::class, 'store'])->middleware('guest')->name('user.register');
@@ -22,6 +23,7 @@ Route::post( '/verify-email', function(){
     if(!auth()->check()){
         return response()->json(['message' => 'You have to be authorization'], 401);
     }
+    $user = User::findOrFail(auth()->user()->id);
     return response()->json(['message' => 'okay!']);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
 
