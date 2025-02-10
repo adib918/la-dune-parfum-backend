@@ -19,7 +19,7 @@ class RegisterUserController extends Controller
             'password' => $request->password,
         ]);
 
-        $service->sendEmailVerification($user->id);
+        // $service->sendEmailVerification($user->id);
         Auth::login($user);
 
         return response()->json([
