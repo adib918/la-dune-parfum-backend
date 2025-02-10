@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\PhoneVerficiationController;
 use App\Http\Requests\VerifyEmailRequest;
 use App\Http\Services\SendEmailService;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterUserController::class, 'store'])->middleware('guest')->name('user.register');
@@ -27,6 +28,9 @@ Route::post( '/verify-email', function(VerifyEmailRequest $request){
     $user = User::findOrFail(auth()->user()->id);
     if(auth()->user()->email_verification_code != (int)$request->email_verification_code){
         return response()->json(["message" => "Verification code isn't correct."], 400);
+    }
+    if(Carbon::now()->diffInMinutes(auth()->user()->email_verification_code_expire_at) > 60){
+        return response()->json(['message' => 'Your verification code has expired.'])->setStatusCode(400);
     }
     return response()->json(['message' => 'okay!']);
 })->middleware(['auth:sanctum', 'throttle:6,1']);
