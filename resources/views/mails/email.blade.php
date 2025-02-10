@@ -60,7 +60,6 @@
         background-color: #f2f3f5e2;
         flex-direction: column;
         padding: 16px;
-        width: 100%;
     }
     .info-container{
         padding: 32px;
@@ -69,6 +68,14 @@
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         background-color: white;
     }
+    .message-container{
+        padding: 10px;
+        box-shadow: inset 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: calc(100% - 20px);
+    }
     .message-title{
         font-size: 16px;
         font-weight: 500;
@@ -76,6 +83,14 @@
         width: 100%;
         text-align: left;
         background-color: white;
+    }
+    .message{
+        font-size: 17px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.851);
+        width: 100%;
+        text-align: center;
+        background-color: transparent;
     }
     .btn-url{
         font-size: 17px;
@@ -134,6 +149,7 @@
         }
         .info-container{
             padding: 16px;
+            border-radius: 0px;
         }
         img{
             margin-top: 50px;
@@ -149,37 +165,18 @@
     <div class="container">
         <div class="info-container">
             <div class="flexy-box">
-                @if($level === 'error')
-                    <h1>La Dune Parfum, Whoops!</h1>
-                @else
-                    <h1>La Dune Parfum, Hello!</h1>
-                @endif
-                @foreach ($introLines as $intro)
-                    <p class="message-title mb-5">{{$intro}}</p>
-                @endforeach
-                @isset($actionText)
-                <?php
-                    $color = match ($level) {
-                        'success', 'error' => $level,
-                        default => 'primary',
-                    };
-                ?>
-                @endisset
-                <a class="btn-url" href="{{$actionUrl}}" target="none">{{$actionText}}</a>
-                @foreach ($outroLines as $outro)
-                    <p class="message-title mt-5">
-                        {{$outro}}
-                    </p>
-                @endforeach
+                <h1>La Dune Parfum, Hello!</h1>
+                <p class="message-title mb-5">Your eamil verification code:</p>
+                <div class="message-container  mb-5">
+                    <p class="message">{{$data['otp_code']}}</p>
+                </div>
+                <p class="message-title">This code will expire in {{$data['otp_expire_at']->diffForHumans()}} minutes.</p>
             </div>
             <p class="ends mb-1 mt-5">Regards,</p>
             <p class="ends mb-5">La Dune Parfum LLC</p>
-            @isset($actionText)
             <p class=" error">
-                If you're having trouble clicking the "{{$actionText}}" button, copy and paste the URL below into your web browser:
-                <a href="{{$actionUrl}}" style="background-color: white;" target="none">Click Here</a>
+                Thank you for trying our website.
             </p>
-            @endisset
         </div>
         <div class="logo-container">
             <img src={{ URL('/img/LaDuneLogo.png') }} alt="">

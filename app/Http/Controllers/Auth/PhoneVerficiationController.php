@@ -14,7 +14,7 @@ class PhoneVerficiationController extends Controller
         $token = getenv("TWILIO_TOKEN");
         $sender_number = getenv("TWILIO_PHONE");
 
-        $otp_code = rand(000000,999999);
+        $otp_code = rand(111111,999999);
         $otp_expire_at = now()->addMinutes(15);
 
         auth()->user()->update([

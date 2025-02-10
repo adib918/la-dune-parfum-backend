@@ -30,6 +30,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'otp_expire_at',
         'address',
         'email_verified_at',
+        'email_verification_code',
+        'email_verification_code_expire_at',
     ];
 
     /**
