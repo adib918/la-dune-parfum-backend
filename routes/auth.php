@@ -5,11 +5,7 @@ use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Auth\UserAddressController;
 use App\Http\Controllers\auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PhoneVerficiationController;
-use App\Http\Requests\VerifyEmailRequest;
 use App\Http\Services\SendEmailService;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterUserController::class, 'store'])->middleware('guest')->name('user.register');
@@ -22,26 +18,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 // Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum'])->name('verification.send');
 
 Route::post( '/verification-code', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
-Route::post( '/verify-email', function(VerifyEmailRequest $request){
-    if(!auth()->check()){
-        return response()->json(['message' => 'You have to be authorization'], 401);
-    }
-    $user = User::findOrFail(auth()->user()->id);
-    if(auth()->user()->email_verification_code != (int)$request->email_verification_code){
-        return response()->json(["message" => "Verification code isn't correct."], 400);
-    }
-    // if(Carbon::now()->diffInMinutes(auth()->user()->email_verification_code_expire_at) > 60){
-    //     return response()->json(['message' => 'Your verification code has expired.'])->setStatusCode(400);
-    // }
-    if($user->hasVerifiedEmail()){
-        return response()->json(['message' => 'Your email is already verified.'], 400);
-    }
-    if (!$user->hasVerifiedEmail()) {
-        $user->markEmailAsVerified();
-        event(new Verified($user));
-    }
-    return response()->json(['message' => 'Email verified successfully.'], 200);
-})->middleware(['auth:sanctum', 'throttle:6,1']);
+Route::post( '/verify-email', [VerifyEmailController::class, 'verify'])->middleware(['auth:sanctum', 'throttle:6,1']);
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot_passowrd'])->name('password.email');
 
