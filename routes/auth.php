@@ -25,6 +25,9 @@ Route::post( '/verify-email', [VerifyEmailController::class, 'verify'])->middlew
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot_passowrd'])->name('password.email');
 
 Route::get('/reset-password/{token}/{email}', function (string $token, string $email) {
+    if(!auth()->check()){
+        return response()->json(['message' => 'You have to be authorization'], 401);
+    }
     return response()->json(['token' => $token, 'email' => $email], 200);
 })->domain("https://www.laduneparfum.com")->name('password.reset');
 
