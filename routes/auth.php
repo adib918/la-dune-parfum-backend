@@ -5,7 +5,9 @@ use App\Http\Controllers\Auth\RegisterUserController;
 use App\Http\Controllers\Auth\UserAddressController;
 use App\Http\Controllers\auth\VerifyEmailController;
 use App\Http\Controllers\Auth\PhoneVerficiationController;
+use App\Http\Requests\VerifyEmailRequest;
 use App\Http\Services\SendEmailService;
+use App\Http\Services\VerifyEmailService;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterUserController::class, 'store'])->middleware('guest')->name('user.register');
@@ -18,7 +20,9 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 // Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum'])->name('verification.send');
 
 Route::post( '/verification-code', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
-Route::post( '/verify-email', [VerifyEmailController::class, 'verify'])->middleware(['auth:sanctum', 'throttle:6,1']);
+Route::post( '/verify-email', function(VerifyEmailRequest $request, VerifyEmailService $service){
+    return $service->verifyEmail($request);
+})->middleware(['auth:sanctum', 'throttle:6,1']);
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot_passowrd'])->name('password.email');
 
