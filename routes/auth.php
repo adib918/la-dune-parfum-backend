@@ -21,9 +21,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->midd
 // Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend_verification_link'])->middleware(['auth:sanctum'])->name('verification.send');
 
 Route::post( '/verification-code', [EmailVerificationController::class, 'resend_verification_link'])->middleware(['auth:sanctum']);
-Route::post( '/verify-email', function(VerifyEmailRequest $request, VerifyEmailService $service){
-    return $service->verifyEmail($request);
-})->middleware(['auth:sanctum', 'throttle:6,1']);
+Route::post( '/verify-email', [EmailVerificationController::class, 'verify'])->middleware(['auth:sanctum', 'throttle:6,1']);
 
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot_passowrd'])->name('password.email');
 
